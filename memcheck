@@ -1,0 +1,2 @@
+#!/bin/bash
+valgrind --track-origins=yes --leak-check=full --suppressions=./libfont.suppr ./build/first_qt_app
