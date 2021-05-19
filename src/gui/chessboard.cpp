@@ -25,7 +25,6 @@ ChessBoard::~ChessBoard()
 void ChessBoard::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    std::cout << "resized" << std::endl;
     if (height() > width())
     {
         int margin = (height() - width()) / 2 + 9;
