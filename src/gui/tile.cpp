@@ -12,6 +12,10 @@ Tile::Tile(QWidget *parent) : QWidget(parent)
 {
     setAutoFillBackground(true);
     setAcceptDrops(true);
+    //Allows Chessboard to know when a tile is grabbed
+    connect(this, SIGNAL(tileStartDrag(int, int)), parent, SLOT(onTileGrabbed(int, int)));
+    connect(this, SIGNAL(tileEndDrag(int, int, int, int)), parent, SLOT(onTileReleased(int, int, int, int)));
+    connect(this, SIGNAL(tileMoveDrag(const QPoint &)), parent, SLOT(updateCursor(const QPoint &)));
 }
 Tile::~Tile() {}
 
@@ -53,8 +57,10 @@ void Tile::mouseMoveEvent(QMouseEvent *event)
         QMimeData *data = new QMimeData;
         data->setText(QString::fromStdString(std::to_string(row) + std::to_string(col)));
         drag->setMimeData(data);
+        emit tileStartDrag(row, col);
         Qt::DropAction dropAction = drag->exec();
     }
+    event->ignore();
 }
 void Tile::dragEnterEvent(QDragEnterEvent *event)
 {
@@ -63,6 +69,10 @@ void Tile::dragEnterEvent(QDragEnterEvent *event)
         event->acceptProposedAction();
     }
 }
+void Tile::dragMoveEvent(QDragMoveEvent *event)
+{
+    emit tileMoveDrag(event->pos() + this->pos());
+}
 void Tile::dropEvent(QDropEvent *event)
 {
     std::string startDragTile = event->mimeData()->text().toStdString();
@@ -70,4 +80,5 @@ void Tile::dropEvent(QDropEvent *event)
     startRow = startDragTile[0] - '0';
     startCol = startDragTile[1] - '0';
     std::cout << "Tile dragging from (" << startRow << ',' << startCol << ')' << " to (" << row << ',' << col << ')' << std::endl;
+    emit tileEndDrag(startRow, startCol, row, col);
 }
