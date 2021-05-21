@@ -1,4 +1,4 @@
-#include "chess.h"
+#include "boardstate.h"
 namespace chess
 {
     /*
@@ -24,9 +24,9 @@ namespace chess
 
     BoardState::~BoardState() {}
 
-    Tile *BoardState::get(int i, int j)
+    Tile *BoardState::get(int row, int col)
     {
-        return &board[i][j];
+        return &board[row][col];
     }
 
     std::ostream &
@@ -42,32 +42,5 @@ namespace chess
         }
         return os;
     }
-
-    int operator+(Column c, int r)
-    {
-        return static_cast<int>(c) * 8 + r - 1;
-    }
-
-    bool Tile::is_empty() const
-    {
-        return empty;
-    }
-    bool Tile::color() const
-    {
-        return white;
-    }
-    char Tile::value() const
-    {
-        if (empty)
-            return '-';
-        else
-            return white ? std::toupper(static_cast<char>(p)) : std::tolower(static_cast<char>(p));
-    }
-    enum Piece Tile::piece() const
-    {
-        return p;
-    }
-    Tile::Tile(Piece piece, bool white) : p(piece), white(white), empty(false){};
-    Tile::Tile() : empty(true){};
 
 }
