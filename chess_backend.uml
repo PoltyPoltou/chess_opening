@@ -1,0 +1,35 @@
+@startuml chess_backend
+
+class BoardState{
+    board: Matrix<Tile>
+    get(row, col)
+    playMove(move)
+    isLegal(move)
+}
+
+class Move{
+    start:int,int
+    end:int,int
+    uci():str
+}
+
+class Tile{
+    p:Piece
+    white:bool
+    empty:bool
+    color()
+    piece()
+    is_empty()
+}
+
+class Game{
+    moveStartNumber: int
+    mainline: Vector<BoardState>
+    variations: map<BoardState, Vector<Game>>
+    algebricNotations: map<BoardState, str>
+    comments: Map<BoardState, str>
+    const getters()
+    static Game readPGN()
+}
+class Engine
+@enduml
