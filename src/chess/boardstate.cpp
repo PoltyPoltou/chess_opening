@@ -5,14 +5,14 @@ namespace chess
         Standard board for chess
     */
     static const Tile STD_BOARD[8][8] = {
-        {Tile(ROOK, true), Tile(KNIGHT, true), Tile(BISHOP, true), Tile(KING, true), Tile(QUEEN, true), Tile(BISHOP, true), Tile(KNIGHT, true), Tile(ROOK, true)},
+        {Tile(ROOK, true), Tile(KNIGHT, true), Tile(BISHOP, true), Tile(QUEEN, true), Tile(KING, true), Tile(BISHOP, true), Tile(KNIGHT, true), Tile(ROOK, true)},
         {Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true), Tile(PAWN, true)},
         {Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile()},
         {Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile()},
         {Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile()},
         {Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile(), Tile()},
         {Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false)},
-        {Tile(ROOK, false), Tile(KNIGHT, false), Tile(BISHOP, false), Tile(KING, false), Tile(QUEEN, false), Tile(BISHOP, false), Tile(KNIGHT, false), Tile(ROOK, false)}};
+        {Tile(ROOK, false), Tile(KNIGHT, false), Tile(BISHOP, false), Tile(QUEEN, false), Tile(KING, false), Tile(BISHOP, false), Tile(KNIGHT, false), Tile(ROOK, false)}};
 
     BoardState::BoardState()
     {
