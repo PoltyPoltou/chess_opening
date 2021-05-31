@@ -2,10 +2,37 @@
 namespace chess
 {
 
-    Move::Move(std::string uci, Piece promote) : uci(uci),
-                                                 start(std::make_tuple(uci[1] - '1', uci[0] - 'a')),
-                                                 end(std::make_tuple(uci[3] - '1', uci[2] - 'a')),
-                                                 promotion(promote) {}
+    Move::Move(std::string uci) : uci(uci),
+                                  start(std::make_tuple(uci[1] - '1', uci[0] - 'a')),
+                                  end(std::make_tuple(uci[3] - '1', uci[2] - 'a'))
+    {
+        if (uci.length() == 5)
+        {
+            char prom = uci[4];
+            switch (prom)
+            {
+            case 'q':
+                promotion = QUEEN;
+                break;
+            case 'b':
+                promotion = BISHOP;
+                break;
+            case 'n':
+                promotion = KNIGHT;
+                break;
+            case 'r':
+                promotion = ROOK;
+                break;
+            default:
+                promotion = KING; // so that any promotion of this type will eventually fail
+                break;
+            }
+        }
+        else
+        {
+            promotion = KING; // so that any promotion of this type will eventually fail
+        }
+    }
 
     Move::Move(int startRow, int startCol, int endRow, int endCol, Piece promote)
         : start(std::make_tuple(startRow, startCol)),
@@ -15,7 +42,8 @@ namespace chess
         char arr[]{startCol + 'a',
                    startRow + '1',
                    endCol + 'a',
-                   endRow + '1'};
+                   endRow + '1',
+                   promote};
         uci = std::string(arr);
     }
 

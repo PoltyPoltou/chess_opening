@@ -12,7 +12,7 @@ namespace chess
         Piece promotion;
 
     public:
-        Move(std::string uci, Piece promote);
+        Move(std::string uci);
         Move(int startRow, int startCol, int endRow, int endCol, Piece promote);
         std::string getUci() const;
         std::tuple<int, int> getStart() const;
