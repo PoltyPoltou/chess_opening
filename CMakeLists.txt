@@ -9,8 +9,12 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-add_executable(chess_opening "")
-
+add_library(chess_logic)
+add_library(opening_gui)
 add_subdirectory(src)
 
-target_link_libraries(chess_opening Qt5::Widgets)
+
+target_link_libraries(opening_gui PUBLIC Qt5::Widgets)
+target_link_libraries(opening_gui PRIVATE chess_logic)
+target_link_libraries(opening_gui_exe opening_gui)
+target_link_libraries(chess_logic_exe chess_logic)

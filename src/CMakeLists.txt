@@ -1,8 +1,4 @@
-target_sources(chess_opening PRIVATE
-    main.cpp
-    )
-
-target_include_directories(chess_opening PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-
-add_subdirectory(chess)
-add_subdirectory(gui)
+add_subdirectory(chess_logic)
+add_subdirectory(chess_logic_exe)
+add_subdirectory(opening_gui)
+add_subdirectory(opening_gui_exe)
