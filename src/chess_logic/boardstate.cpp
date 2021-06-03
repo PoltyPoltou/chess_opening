@@ -43,9 +43,9 @@ namespace chess
         return get(str[1] - '1', str[0] - 'a');
     }
 
-    Tile *BoardState::get(std::tuple<int, int> coords)
+    Tile *BoardState::get(std::pair<int, int> coords)
     {
-        return &board[std::get<0>(coords)][std::get<1>(coords)];
+        return &board[coords.first][coords.second];
     }
 
     Tile BoardState::safeGet(int row, int col)
@@ -81,8 +81,8 @@ namespace chess
     std::string BoardState::playMove(Move &mv)
     {
         Tile *played = get(mv.getStart());
-        int r1 = std::get<0>(mv.getStart()), c1 = std::get<1>(mv.getStart());
-        int r2 = std::get<0>(mv.getEnd()), c2 = std::get<1>(mv.getEnd());
+        int r1 = mv.getStart().first, c1 = mv.getStart().second;
+        int r2 = mv.getEnd().first, c2 = mv.getEnd().second;
         std::string uci = mv.getUci();
         // Check if the move is a castle move,
         // we set to false the given castling right
@@ -134,18 +134,18 @@ namespace chess
         if (played->piece() == PAWN && ((uci[1] == '2' && uci[3] == '4') || (uci[1] == '7' && uci[3] == '5')))
         {
             //set the prise en passant tile
-            priseEnPassant = std::make_tuple((r1 + r2) / 2, c1);
+            priseEnPassant = std::make_pair((r1 + r2) / 2, c1);
         }
         else
         {
             //reset it otherwise
-            priseEnPassant = std::make_tuple(-1, -1);
+            priseEnPassant = std::make_pair(-1, -1);
         }
 
         // we have to check if it is en passant, to remove the captured pawn
         if (played->piece() == PAWN && priseEnPassant == mv.getEnd())
         {
-            emptyTile(get(std::make_tuple(r1, c2)));
+            emptyTile(get(std::make_pair(r1, c2)));
         }
         //promotion
         if (played->piece() == PAWN && (uci[3] == '8' || uci[3] == '1'))
@@ -164,10 +164,10 @@ namespace chess
         Does not handle castling
         \param attacking checks if the tile is attacked (ie it will not check anything about t2)
     */
-    bool BoardState::legalPath(Piece p, bool clr, const std::tuple<int, int> &t1, const std::tuple<int, int> &t2, bool attacking)
+    bool BoardState::legalPath(Piece p, bool clr, const std::pair<int, int> &t1, const std::pair<int, int> &t2, bool attacking)
     {
-        int r1 = std::get<0>(t1), c1 = std::get<1>(t1);
-        int r2 = std::get<0>(t2), c2 = std::get<1>(t2);
+        int r1 = t1.first, c1 = t1.second;
+        int r2 = t2.first, c2 = t2.second;
         if (!get(t2)->is_empty() && get(t2)->color() == clr && !attacking)
         {
             return false;
@@ -272,7 +272,7 @@ namespace chess
         \brief Finds the king of the given colour, and return its coordinates.
         If there is not king, it will return the -1,-1 coords
     */
-    std::tuple<int, int> BoardState::findKing(bool colour)
+    std::pair<int, int> BoardState::findKing(bool colour)
     {
         for (int i = 0; i < 8; i++)
         {
@@ -280,12 +280,12 @@ namespace chess
             {
                 if (get(i, j)->piece() == KING && get(i, j)->color() == colour)
                 {
-                    return std::make_tuple(i, j);
+                    return std::make_pair(i, j);
                 }
             }
         }
         std::cerr << "findKing was used on a BoardState that has no king" << std::endl;
-        return std::make_tuple(-1, -1);
+        return std::make_pair(-1, -1);
     }
     /**
      * \brief checks if the piece p with given colour is at the given position
@@ -303,14 +303,14 @@ namespace chess
     /**
      * \brief checks if the tile at coords is attacked by a piece of the given colour
     */
-    bool BoardState::isAttacked(std::tuple<int, int> coords, bool colour)
+    bool BoardState::isAttacked(std::pair<int, int> coords, bool colour)
     {
         for (int r = 0; r < 8; r++)
         {
             for (int c = 0; c < 8; c++)
             {
                 Tile *t = get(r, c);
-                if (!t->is_empty() && t->color() == colour && legalPath(t->piece(), t->color(), std::make_tuple(r, c), coords, true))
+                if (!t->is_empty() && t->color() == colour && legalPath(t->piece(), t->color(), std::make_pair(r, c), coords, true))
                 {
                     return true;
                 }
@@ -321,9 +321,9 @@ namespace chess
     bool BoardState::isLegal(Move &mv)
     {
         Tile *t1 = get(mv.getStart());
-        int r1 = std::get<0>(mv.getStart()), c1 = std::get<1>(mv.getStart());
         Tile *t2 = get(mv.getEnd());
-        int r2 = std::get<0>(mv.getEnd()), c2 = std::get<1>(mv.getEnd());
+        int r1 = mv.getStart().first, c1 = mv.getStart().second;
+        int r2 = mv.getEnd().first, c2 = mv.getEnd().second;
         // checks that the move is not absurd
         if (!t1->is_empty() && t1->color() == turn && mv.getStart() != mv.getEnd())
         {
@@ -358,19 +358,19 @@ namespace chess
                 {
                     if (mv.getUci() == "e1c1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_tuple(0, 3), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 3), !t1->color());
                     }
                     if (mv.getUci() == "e8c8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_tuple(7, 3), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 3), !t1->color());
                     }
                     if (mv.getUci() == "e1g1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_tuple(0, 5), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 5), !t1->color());
                     }
                     if (mv.getUci() == "e8g8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_tuple(7, 5), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 5), !t1->color());
                     }
                 }
                 movePossible = standardMove || castleMove;

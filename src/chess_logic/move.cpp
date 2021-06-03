@@ -3,8 +3,8 @@ namespace chess
 {
 
     Move::Move(std::string uci) : uci(uci),
-                                  start(std::make_tuple(uci[1] - '1', uci[0] - 'a')),
-                                  end(std::make_tuple(uci[3] - '1', uci[2] - 'a'))
+                                  start(std::make_pair(uci[1] - '1', uci[0] - 'a')),
+                                  end(std::make_pair(uci[3] - '1', uci[2] - 'a'))
     {
         if (uci.length() == 5)
         {
@@ -35,8 +35,8 @@ namespace chess
     }
 
     Move::Move(int startRow, int startCol, int endRow, int endCol, Piece promote)
-        : start(std::make_tuple(startRow, startCol)),
-          end(std::make_tuple(endRow, endCol)),
+        : start(std::make_pair(startRow, startCol)),
+          end(std::make_pair(endRow, endCol)),
           promotion(promote)
     {
         char arr[]{startCol + 'a',
@@ -52,12 +52,12 @@ namespace chess
         return uci;
     }
 
-    std::tuple<int, int> Move::getStart() const
+    std::pair<int, int> Move::getStart() const
     {
         return start;
     }
 
-    std::tuple<int, int> Move::getEnd() const
+    std::pair<int, int> Move::getEnd() const
     {
         return end;
     }
