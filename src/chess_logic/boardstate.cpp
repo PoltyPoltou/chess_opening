@@ -343,11 +343,12 @@ namespace chess
                                 abs(c1 - c2) == (mv.getEnd() == priseEnPassant);
                 }
                 //promotion check
-                bool promotion = (r2 != 7 && r2 != 0) ||          // last row ? (no colour check as the rules won't allow the other color)
-                                 (mv.getPromotion() == KNIGHT) || // checks that the promotion is valid
-                                 (mv.getPromotion() == ROOK) ||
-                                 (mv.getPromotion() == ROOK) ||
-                                 (mv.getPromotion() == QUEEN);
+                bool promotion = (!mv.is_promotion() && (r2 != 7 && r2 != 0)) || // last row ? (no colour check as the rules won't allow the other color)
+                                 ((mv.getPromotion() == KNIGHT) ||               // checks that the promotion is valid
+                                  (mv.getPromotion() == BISHOP) ||
+                                  (mv.getPromotion() == ROOK) ||
+                                  (mv.getPromotion() == QUEEN) &&
+                                      mv.is_promotion());
 
                 movePossible = (standardMove && promotion) || enPassant;
             }

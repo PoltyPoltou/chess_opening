@@ -79,6 +79,5 @@ void Tile::dropEvent(QDropEvent *event)
     int startRow, startCol;
     startRow = startDragTile[0] - '0';
     startCol = startDragTile[1] - '0';
-    std::cout << "Tile dragging from (" << startRow << ',' << startCol << ')' << " to (" << row << ',' << col << ')' << std::endl;
     emit tileEndDrag(startRow, startCol, row, col);
 }
