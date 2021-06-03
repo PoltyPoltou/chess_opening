@@ -47,6 +47,7 @@ namespace chess
     {
         return &board[std::get<0>(coords)][std::get<1>(coords)];
     }
+
     Tile BoardState::safeGet(int row, int col)
     {
         if (row >= 0 && row < 8 && col >= 0 && col < 8)
@@ -62,9 +63,7 @@ namespace chess
 
     void BoardState::swapTiles(Tile *t1, Tile *t2)
     {
-        Tile swap = *t1;
-        *t1 = *t2;
-        *t2 = std::move(swap);
+        std::swap(*t1, *t2);
     }
 
     void BoardState::emptyTile(Tile *t)
