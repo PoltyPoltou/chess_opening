@@ -84,6 +84,7 @@ namespace chess
         int r1 = mv.getStart().first, c1 = mv.getStart().second;
         int r2 = mv.getEnd().first, c2 = mv.getEnd().second;
         std::string uci = mv.getUci();
+        std::string san;
         // Check if the move is a castle move,
         // we set to false the given castling right
         // And we only move the rook
@@ -157,6 +158,7 @@ namespace chess
         emptyTile(get(mv.getStart()));
         //swap the turn color
         turn = !turn;
+        return san;
     }
 
     /**
