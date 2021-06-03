@@ -3,9 +3,34 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
+#include <QString>
 #include <iostream>
 
-ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent), ui(new Ui::ChessBoard), overlay(parent)
+namespace
+{
+    std::string getImagePath(chess::Piece piece, bool colour, std::string prefixPath = "/home/polty/Documents/cpp/chessopening/")
+    {
+        std::string path(prefixPath);
+        path += "img/std/";
+        if (colour == chess::WHITE)
+        {
+            path += 'w';
+        }
+        else
+        {
+            path += 'b';
+        }
+        return path + static_cast<char>(piece) + ".png";
+    }
+
+    void getPiecePixMap(QPixmap &pixmap, chess::Piece piece, bool colour, std::string prefixPath = "/home/polty/Documents/cpp/chessopening/")
+    {
+        pixmap.load(QString::fromStdString(getImagePath(piece, colour, prefixPath)));
+    }
+
+}
+
+ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent), ui(new Ui::ChessBoard), overlay(parent), state(chess::BoardState())
 {
     ui->setupUi(this);
     for (int i = 0; i < 8; i++)
@@ -15,7 +40,7 @@ ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent), ui(new Ui::ChessBoard
             Tile *t = getTile(i, j);
             if (t != nullptr)
             {
-                t->setCoords(8 - i, j + 1);
+                t->setCoords(i, j);
             }
         }
     }
@@ -23,20 +48,37 @@ ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent), ui(new Ui::ChessBoard
     overlay.piecesMap = &piecesMap;
     overlay.cursorPos = QPoint(0, 0);
     overlay.grabbedPiece = nullptr;
+    updatePieces();
 }
 
 ChessBoard::~ChessBoard()
 {
     delete ui;
 }
+/**
+ * the pixmap will be moved so p will not be usable after this function
+ */
 void ChessBoard::setPiece(int row, int column, const QPixmap &p)
 {
-    piecesMap[std::make_tuple(8 - row, column - 1)] = p;
+    piecesMap[std::make_pair(row, column)] = std::move(p);
 }
 
-std::tuple<int, int> ChessBoard::getGridCoords(int row, int column) const
+void ChessBoard::updatePieces()
 {
-    return std::make_tuple(8 - row, column - 1);
+    chess::Tile *t;
+    QPixmap pieceImg;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            t = state.get(i, j);
+            if (!t->is_empty())
+            {
+                getPiecePixMap(pieceImg, t->piece(), t->color());
+                setPiece(i, j, pieceImg);
+            }
+        }
+    }
 }
 
 void ChessBoard::resizeEvent(QResizeEvent *event)
@@ -54,6 +96,7 @@ void ChessBoard::resizeEvent(QResizeEvent *event)
     }
     overlay.setGeometry(geometry());
 }
+
 void ChessBoard::updateCursor(const QPoint &cursor)
 {
     if (overlay.grabbedPiece)
@@ -62,19 +105,19 @@ void ChessBoard::updateCursor(const QPoint &cursor)
         overlay.repaint();
     }
 }
+
 void ChessBoard::getTileCoords(Tile &tile, int *row, int *col)
 {
     int idx, _;
     idx = ui->gridLayout->indexOf(&tile);
     ui->gridLayout->getItemPosition(idx, row, col, &_, &_);
-    *row = 8 - *row;
-    ++*col;
+    *row = 7 - *row;
 }
 
 Tile *ChessBoard::getTile(int row, int col)
 {
     Tile *result = nullptr;
-    auto *ptr = ui->gridLayout->itemAtPosition(row, col);
+    QLayoutItem *ptr = ui->gridLayout->itemAtPosition(7 - row, col);
     if (ptr != nullptr && !ptr->isEmpty())
     {
         result = qobject_cast<Tile *>(ptr->widget());
@@ -84,7 +127,7 @@ Tile *ChessBoard::getTile(int row, int col)
 
 void ChessBoard::onTileGrabbed(int row, int col)
 {
-    std::tuple<int, int> key = getGridCoords(row, col);
+    std::pair<int, int> key = std::make_pair(row, col);
     if (piecesMap.find(key) != piecesMap.end())
     {
         overlay.grabbedPiece = &piecesMap[key];
@@ -104,9 +147,9 @@ void ChessBoardOverlay::paintEvent(QPaintEvent *event)
     paint.setRenderHint(QPainter::SmoothPixmapTransform);
     for (auto iter : *piecesMap)
     {
-        std::tuple<int, int> key = iter.first;
+        std::pair<int, int> key = iter.first;
         QPixmap *piece = &piecesMap->at(key);
-        QRect tileRect = layout->itemAtPosition(std::get<0>(key), std::get<1>(key))->geometry();
+        QRect tileRect = layout->itemAtPosition(7 - key.first, key.second)->geometry();
         if (piece == grabbedPiece)
         {
             tileRect.moveCenter(cursorPos);

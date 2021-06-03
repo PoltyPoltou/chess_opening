@@ -1,5 +1,6 @@
 #pragma once
 
+#include "boardstate.h"
 #include "tile.h"
 #include <QColor>
 #include <QGridLayout>
@@ -25,7 +26,7 @@ class ChessBoardOverlay : public QWidget
     friend ChessBoard;
 
 private:
-    std::map<std::tuple<int, int>, QPixmap> *piecesMap;
+    std::map<std::pair<int, int>, QPixmap> *piecesMap;
     QPoint cursorPos;
     QPixmap *grabbedPiece;
     QGridLayout *layout;
@@ -43,10 +44,13 @@ class ChessBoard : public QWidget
 
 private:
     Ui::ChessBoard *ui;
-    std::map<std::tuple<int, int>, QPixmap> piecesMap;
+    std::map<std::pair<int, int>, QPixmap> piecesMap;
     ChessBoardOverlay overlay;
+    chess::BoardState state;
+
     void getTileCoords(Tile &tile, int *row, int *col);
     Tile *getTile(int row, int col);
+    void updatePieces();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);
@@ -55,7 +59,6 @@ public:
     ChessBoard(QWidget *parent = nullptr);
     ~ChessBoard();
     void setPiece(int row, int column, const QPixmap &piece);
-    std::tuple<int, int> getGridCoords(int row, int column) const;
 
 public slots:
     void onTileGrabbed(int row, int col);
