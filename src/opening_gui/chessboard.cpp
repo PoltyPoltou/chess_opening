@@ -1,5 +1,5 @@
 #include "chessboard.h"
-#include "ui_chessboard.h"
+#include "ui/ui_chessboard.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
@@ -23,9 +23,6 @@ ChessBoard::ChessBoard(QWidget *parent) : QWidget(parent), ui(new Ui::ChessBoard
     overlay.piecesMap = &piecesMap;
     overlay.cursorPos = QPoint(0, 0);
     overlay.grabbedPiece = nullptr;
-    QPixmap p;
-    p.load("/home/polty/Documents/cpp/chessopening/img/std/bb.png");
-    setPiece(1, 1, p);
 }
 
 ChessBoard::~ChessBoard()
