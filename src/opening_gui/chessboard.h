@@ -59,7 +59,7 @@ public:
     ChessBoard(QWidget *parent = nullptr);
     ~ChessBoard();
     void setPiece(int row, int column, const QPixmap &piece);
-
+    bool attemptMove(std::pair<int, int> t1, std::pair<int, int> t2);
 public slots:
     void onTileGrabbed(int row, int col);
     void onTileReleased(int startRow, int startCol, int endRow, int endCol);

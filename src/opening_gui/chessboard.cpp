@@ -67,6 +67,7 @@ void ChessBoard::updatePieces()
 {
     chess::Tile *t;
     QPixmap pieceImg;
+    piecesMap.clear();
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -137,6 +138,7 @@ void ChessBoard::onTileGrabbed(int row, int col)
 void ChessBoard::onTileReleased(int startRow, int startCol, int endRow, int endCol)
 {
     overlay.grabbedPiece = nullptr;
+    attemptMove(std::make_pair(startRow, startCol), std::make_pair(endRow, endCol));
     overlay.repaint();
 }
 
@@ -156,4 +158,16 @@ void ChessBoardOverlay::paintEvent(QPaintEvent *event)
         }
         paint.drawPixmap(tileRect, *piece);
     }
+}
+
+bool ChessBoard::attemptMove(std::pair<int, int> t1, std::pair<int, int> t2)
+{
+    chess::Move mv(t1.first, t1.second, t2.first, t2.second);
+    bool playable = state.isLegal(mv);
+    if (playable)
+    {
+        state.playMove(mv);
+    }
+    updatePieces();
+    return playable;
 }
