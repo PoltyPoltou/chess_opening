@@ -39,9 +39,9 @@ namespace chess
         bool canLongCastle(bool colour);
         bool isCheck();
         bool isAttacked(std::pair<int, int> coords, bool colour);
-        bool isLegal(Move &mv);
+        bool isLegal(Move const &mv);
         bool legalPath(Piece p, bool clr, const std::pair<int, int> &t1, const std::pair<int, int> &t2, bool attacking = false);
-        std::string playMove(Move &mv);
+        std::string playMove(Move const &mv);
     };
     std::ostream &operator<<(std::ostream &os, BoardState &brdState);
 

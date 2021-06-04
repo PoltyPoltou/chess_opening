@@ -78,7 +78,7 @@ namespace chess
         Does not check for move validity, call isLegal(mv) first
         Undefined behavior if the move is not legal
     */
-    std::string BoardState::playMove(Move &mv)
+    std::string BoardState::playMove(Move const &mv)
     {
         Tile *played = get(mv.getStart());
         int r1 = mv.getStart().first, c1 = mv.getStart().second;
@@ -126,7 +126,7 @@ namespace chess
         {
             castlingRight_short[turn] = false;
         }
-        if (uci.substr(0, 2) == "e1" || uci.substr(0, 2) == "e8")
+        if (played->piece() == KING)
         {
             castlingRight_short[turn] = false;
             castlingRight_long[turn] = false;
@@ -320,7 +320,7 @@ namespace chess
         }
         return false;
     }
-    bool BoardState::isLegal(Move &mv)
+    bool BoardState::isLegal(Move const &mv)
     {
         Tile *t1 = get(mv.getStart());
         Tile *t2 = get(mv.getEnd());
@@ -361,19 +361,19 @@ namespace chess
                 {
                     if (mv.getUci() == "e1c1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 3), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 3), !t1->color()) && castlingRight_long[turn];
                     }
                     if (mv.getUci() == "e8c8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 3), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 3), !t1->color()) && castlingRight_long[turn];
                     }
                     if (mv.getUci() == "e1g1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 5), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 5), !t1->color()) && castlingRight_short[turn];
                     }
                     if (mv.getUci() == "e8g8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 5), !t1->color());
+                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 5), !t1->color()) && castlingRight_short[turn];
                     }
                 }
                 movePossible = standardMove || castleMove;
