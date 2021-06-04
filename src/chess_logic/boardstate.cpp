@@ -132,6 +132,12 @@ namespace chess
             castlingRight_long[turn] = false;
         }
 
+        // we have to check if it is en passant, to remove the captured pawn
+        if (played->piece() == PAWN && priseEnPassant == mv.getEnd())
+        {
+            emptyTile(get(std::make_pair(r1, c2)));
+        }
+
         if (played->piece() == PAWN && ((uci[1] == '2' && uci[3] == '4') || (uci[1] == '7' && uci[3] == '5')))
         {
             //set the prise en passant tile
@@ -143,11 +149,6 @@ namespace chess
             priseEnPassant = std::make_pair(-1, -1);
         }
 
-        // we have to check if it is en passant, to remove the captured pawn
-        if (played->piece() == PAWN && priseEnPassant == mv.getEnd())
-        {
-            emptyTile(get(std::make_pair(r1, c2)));
-        }
         //promotion
         if (played->piece() == PAWN && (uci[3] == '8' || uci[3] == '1'))
         {
