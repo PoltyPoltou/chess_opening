@@ -361,19 +361,37 @@ namespace chess
                 {
                     if (mv.getUci() == "e1c1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 3), !t1->color()) && castlingRight_long[turn];
+                        castleMove = !isCheck() &&
+                                     get("b1")->is_empty() &&
+                                     get("c1")->is_empty() &&
+                                     get("d1")->is_empty() &&
+                                     !isAttacked(std::make_pair(0, 3), !t1->color()) &&
+                                     castlingRight_long[turn];
                     }
                     if (mv.getUci() == "e8c8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 3), !t1->color()) && castlingRight_long[turn];
+                        castleMove = !isCheck() &&
+                                     get("b8")->is_empty() &&
+                                     get("c8")->is_empty() &&
+                                     get("d8")->is_empty() &&
+                                     !isAttacked(std::make_pair(7, 3), !t1->color()) &&
+                                     castlingRight_long[turn];
                     }
                     if (mv.getUci() == "e1g1")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(0, 5), !t1->color()) && castlingRight_short[turn];
+                        castleMove = !isCheck() &&
+                                     get("f1")->is_empty() &&
+                                     get("g1")->is_empty() &&
+                                     !isAttacked(std::make_pair(0, 5), !t1->color()) &&
+                                     castlingRight_short[turn];
                     }
                     if (mv.getUci() == "e8g8")
                     {
-                        castleMove = !isCheck() && !isAttacked(std::make_pair(7, 5), !t1->color()) && castlingRight_short[turn];
+                        castleMove = !isCheck() &&
+                                     get("f8")->is_empty() &&
+                                     get("g8")->is_empty() &&
+                                     !isAttacked(std::make_pair(7, 5), !t1->color()) &&
+                                     castlingRight_short[turn];
                     }
                 }
                 movePossible = standardMove || castleMove;
