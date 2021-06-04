@@ -24,4 +24,17 @@ namespace chess
     }
     Tile::Tile(Piece piece, bool white) : p(piece), white(white), empty(false){};
     Tile::Tile() : empty(true){};
+
+    bool operator==(chess::Tile const &t1, chess::Tile const &t2)
+    {
+        if (!t1.is_empty() && !t2.is_empty())
+        {
+            return t1.color() == t2.color() && t1.piece() == t2.piece();
+        }
+        else
+        {
+            return t1.is_empty() && t2.is_empty();
+        }
+    }
+
 }

@@ -20,4 +20,5 @@ namespace chess
         Tile(enum Piece piece, bool white);
         Tile();
     };
+    bool operator==(chess::Tile const &t1, chess::Tile const &t2);
 }
