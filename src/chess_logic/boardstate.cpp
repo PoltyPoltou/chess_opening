@@ -109,6 +109,7 @@ namespace chess
         int r2 = mv.getEnd().first, c2 = mv.getEnd().second;
         std::string uci = mv.getUci();
         std::string san;
+        std::string sanPromotion;
         // Check if the move is a castle move,
         // we set to false the given castling right
         // And we only move the rook
@@ -116,28 +117,28 @@ namespace chess
         {
             if (played->color() == WHITE)
             {
-                castlingRight_short[WHITE] = false;
-                castlingRight_long[WHITE] = false;
                 if (uci == "e1g1")
                 {
                     swapTiles(get("h1"), get("f1"));
+                    san = "O-O";
                 }
                 else
                 {
                     swapTiles(get("a1"), get("d1"));
+                    san = "O-O-O";
                 }
             }
             else
             {
-                castlingRight_short[BLACK] = false;
-                castlingRight_long[BLACK] = false;
                 if (uci == "e8g8")
                 {
                     swapTiles(get("h8"), get("f8"));
+                    san = "O-O";
                 }
                 else
                 {
                     swapTiles(get("a8"), get("d8"));
+                    san = "O-O-O";
                 }
             }
         }
@@ -177,6 +178,7 @@ namespace chess
         if (mv.is_promotion())
         {
             *played = Tile(mv.getPromotion(), turn);
+            sanPromotion = std::toupper(static_cast<char>(mv.getPromotion()));
         }
         // Now we move the piece
         swapTiles(get(mv.getStart()), get(mv.getEnd()));
@@ -460,5 +462,13 @@ namespace chess
             os << std::endl;
         }
         return os;
+    }
+    void BoardState::setTile(Tile *emplacement, Tile const &new_tile)
+    {
+        if (!emplacement->is_empty())
+        {
+            piece_map[emplacement]
+        }
+        *emplacement = std::move(new_tile);
     }
 }
