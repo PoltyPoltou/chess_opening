@@ -14,16 +14,23 @@ namespace chess
         {Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false), Tile(PAWN, false)},
         {Tile(ROOK, false), Tile(KNIGHT, false), Tile(BISHOP, false), Tile(QUEEN, false), Tile(KING, false), Tile(BISHOP, false), Tile(KNIGHT, false), Tile(ROOK, false)}};
 
-    BoardState::BoardState()
+    BoardState::BoardState() : castlingRight_long{true, true},
+                               castlingRight_short{true, true},
+                               turn(chess::WHITE)
     {
-        turn = WHITE;
-        castlingRight_short[WHITE] = true;
-        castlingRight_short[BLACK] = true;
-        castlingRight_long[WHITE] = true;
-        castlingRight_long[BLACK] = true;
         for (int i = 0; i < 8; i++)
         {
             std::copy(STD_BOARD[i], STD_BOARD[i] + 8, board[i]);
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (!get(i, j)->is_empty())
+                {
+                    piece_map[get(i, j)->piece()].insert(get(i, j));
+                }
+            }
         }
     }
 
@@ -63,6 +70,22 @@ namespace chess
 
     void BoardState::swapTiles(Tile *t1, Tile *t2)
     {
+        if (!t1->is_empty())
+        {
+            piece_map.at(t1->piece()).erase(t1);
+            if (!t2->is_empty())
+            {
+                piece_map.at(t1->piece()).insert(t2);
+            }
+        }
+        if (!t2->is_empty())
+        {
+            piece_map.at(t2->piece()).erase(t2);
+            if (!t1->is_empty())
+            {
+                piece_map.at(t2->piece()).insert(t1);
+            }
+        }
         std::swap(*t1, *t2);
     }
 
@@ -70,6 +93,7 @@ namespace chess
     {
         if (!t->is_empty())
         {
+            piece_map.at(t->piece()).erase(t);
             *t = std::move(Tile());
         }
     }
@@ -150,7 +174,7 @@ namespace chess
         }
 
         //promotion
-        if (played->piece() == PAWN && (uci[3] == '8' || uci[3] == '1'))
+        if (mv.is_promotion())
         {
             *played = Tile(mv.getPromotion(), turn);
         }
