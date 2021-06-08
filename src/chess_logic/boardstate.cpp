@@ -467,7 +467,7 @@ namespace chess
     {
         if (!emplacement->is_empty())
         {
-            piece_map[emplacement]
+            piece_map[emplacement->piece()] = TileSet();
         }
         *emplacement = std::move(new_tile);
     }
