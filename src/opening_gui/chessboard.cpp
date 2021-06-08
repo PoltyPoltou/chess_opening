@@ -8,10 +8,9 @@
 
 namespace
 {
-    std::string getImagePath(chess::Piece piece, bool colour, std::string prefixPath = "/home/polty/Documents/cpp/chessopening/")
+    std::string getImagePath(chess::Piece piece, bool colour)
     {
-        std::string path(prefixPath);
-        path += "img/std/";
+        std::string path("./img/std/");
         if (colour == chess::WHITE)
         {
             path += 'w';
@@ -23,9 +22,9 @@ namespace
         return path + static_cast<char>(piece) + ".png";
     }
 
-    void getPiecePixMap(QPixmap &pixmap, chess::Piece piece, bool colour, std::string prefixPath = "/home/polty/Documents/cpp/chessopening/")
+    void getPiecePixMap(QPixmap &pixmap, chess::Piece piece, bool colour)
     {
-        pixmap.load(QString::fromStdString(getImagePath(piece, colour, prefixPath)));
+        pixmap.load(QString::fromStdString(getImagePath(piece, colour)));
     }
 
 }
