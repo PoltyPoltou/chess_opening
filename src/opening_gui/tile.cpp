@@ -29,7 +29,7 @@ void Tile::updateBackgroundColor()
 {
     QColor clr = (row + col) % 2 == 0 ? ChessColors::even : ChessColors::uneven;
     QPalette p(palette());
-    p.setColor(QPalette::Background, clr);
+    p.setColor(QPalette::Window, clr);
     setPalette(p);
 }
 int Tile::getRow()

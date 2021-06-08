@@ -1,6 +1,7 @@
 #pragma once
 #include "piece.h"
 #include <tuple>
+#include <string>
 namespace chess
 {
     class Move
