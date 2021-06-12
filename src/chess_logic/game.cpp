@@ -1,13 +1,8 @@
 #include "game.h"
-namespace chess
-{
+namespace chess {
 
-    Game::Game(/* args */)
-    {
-    }
+Game::Game(/* args */) {}
 
-    Game::~Game()
-    {
-    }
+Game::~Game() {}
 
 } // namespace chess
